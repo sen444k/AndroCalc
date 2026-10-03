@@ -154,9 +154,12 @@
             display: flex;
             justify-content: flex-start;
             align-items: center;
-            width: 100%;
+            width: auto;
+            align-self: flex-start;
             height: 30px;
             transition: color 0.2s;
+            overflow: visible;
+            border-radius: 0;
         }
         .mode-switch:hover { color: #1a1a1a; }
 
@@ -303,7 +306,7 @@
         <div class="current-operand">0</div>
     </div>
 
-    <button class="mode-switch" onclick="toggleScientific()" id="modeToggle">
+    <button class="mode-switch" onclick="toggleScientific()" id="modeToggle" data-no-ripple>
         &#10094;&#10095;
     </button>
 
@@ -722,11 +725,13 @@ updateDisplay();
 
 document.querySelectorAll('button').forEach(button => {
     button.addEventListener('pointerdown', function(e) {
+        if (this.hasAttribute('data-no-ripple')) return;
+        
         const existingRipple = this.querySelector('.ripple');
         if (existingRipple) existingRipple.remove();
 
         const rect = this.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
+        const size = Math.min(rect.width, rect.height);
         const x = e.clientX - rect.left - size / 2;
         const y = e.clientY - rect.top - size / 2;
 
